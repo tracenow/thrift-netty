@@ -3,8 +3,6 @@
  */
 package cn.trace.thrift.netty.examples;
 
-import java.util.concurrent.ExecutionException;
-
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.TProcessorFactory;
@@ -43,10 +41,9 @@ public class EchoServer {
 
 				try {
 					return niftyProcessor.process(in, out, null).get();
-				} catch (InterruptedException | ExecutionException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					throw new TException(e);
 				}
-				return false;
 			}
 
 		};

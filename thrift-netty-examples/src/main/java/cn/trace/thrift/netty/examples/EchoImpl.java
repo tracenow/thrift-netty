@@ -14,7 +14,7 @@ import cn.trace.thrift.netty.util.ThreadContext;
  *
  */
 public class EchoImpl implements Echo {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(EchoImpl.class);
 
 	@Override

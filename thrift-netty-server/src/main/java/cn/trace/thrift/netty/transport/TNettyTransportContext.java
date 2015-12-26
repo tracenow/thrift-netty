@@ -10,6 +10,6 @@ import java.net.SocketAddress;
  *
  */
 public interface TNettyTransportContext {
-	
+
 	public SocketAddress getRemoteAddress();
 }
