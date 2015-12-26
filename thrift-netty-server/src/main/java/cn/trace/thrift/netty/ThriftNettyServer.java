@@ -21,39 +21,39 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  *
  */
 public class ThriftNettyServer {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ThriftNettyServer.class);
 
 	private final ThriftNettyServerDef def;
-    private EventLoopGroup bossGroup = null;
-    private EventLoopGroup workerGroup = null;
-	
+	private EventLoopGroup bossGroup = null;
+	private EventLoopGroup workerGroup = null;
+
 	public ThriftNettyServer(ThriftNettyServerDef def) {
 		this.def = def;
 	}
-	
+
 	public void start() throws InterruptedException {
 		bossGroup = new NioEventLoopGroup(def.getBossEventLoopCount());
-        workerGroup = new NioEventLoopGroup(def.getWorkerEventLoopCount());
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(bossGroup, workerGroup)
-                     .localAddress(def.getServerPort())
-                     .channel(NioServerSocketChannel.class)
-                     .childHandler(new ChannelInitializer<Channel>() {
+		workerGroup = new NioEventLoopGroup(def.getWorkerEventLoopCount());
+		ServerBootstrap bootstrap = new ServerBootstrap();
+		bootstrap.group(bossGroup, workerGroup).localAddress(def.getServerPort()).channel(NioServerSocketChannel.class)
+				.childHandler(new ChannelInitializer<Channel>() {
 
-                        @Override
-                        protected void initChannel(Channel ch) throws Exception {
-                            ch.pipeline().addLast("decode", new ThriftNettyDecoder(def.getMaxFrameSize(), def.getProtocolFactory()))
-                                         .addLast("encode", new ThriftNettyEncoder(def.getMaxFrameSize()))
-                                         .addLast("dispatch", new ThriftNettyDispatcher(def));
-                        }
-                         
-                     });
-            logger.info(def.getName() + " " + "listen port : " + def.getServerPort());
-            bootstrap.bind().sync();
+					@Override
+					protected void initChannel(Channel ch) throws Exception {
+						ch.pipeline()
+								.addLast("decode",
+										new ThriftNettyDecoder(def.getMaxFrameSize(), def.getProtocolFactory()))
+								.addLast("encode", new ThriftNettyEncoder(def.getMaxFrameSize()))
+								.addLast("dispatch", new ThriftNettyDispatcher(def));
+					}
+
+				});
+		logger.info(def.getName() + " " + "listen port : " + def.getServerPort());
+		bootstrap.bind().sync();
 	}
-	
-	public void stop() throws InterruptedException  {
+
+	public void stop() throws InterruptedException {
 		bossGroup.shutdownGracefully().sync();
 		workerGroup.shutdownGracefully().sync();
 	}

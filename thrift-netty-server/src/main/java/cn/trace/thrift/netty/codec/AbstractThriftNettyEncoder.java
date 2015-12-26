@@ -18,12 +18,12 @@ public abstract class AbstractThriftNettyEncoder extends MessageToByteEncoder<TN
 	@Override
 	protected void encode(ChannelHandlerContext ctx, TNettyTransport msg, ByteBuf out) throws Exception {
 		ByteBuf message = encode(ctx, msg);
-        try {
-            out.writeBytes(message);
-        } finally {
-        	message.release();
-        }
+		try {
+			out.writeBytes(message);
+		} finally {
+			message.release();
+		}
 	}
-	
+
 	protected abstract ByteBuf encode(ChannelHandlerContext ctx, TNettyTransport msg) throws Exception;
 }

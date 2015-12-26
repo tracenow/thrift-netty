@@ -17,17 +17,15 @@ public class EchoClient {
 
 	/**
 	 * @param args
-	 * @throws ExecutionException 
-	 * @throws InterruptedException 
+	 * @throws ExecutionException
+	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		ThriftClientManager clientManager = new ThriftClientManager();
 		try {
 			FramedClientConnector connector = new FramedClientConnector(new InetSocketAddress("localhost", 8080));
 			Echo client = clientManager.createClient(connector, Echo.class).get();
-			for(int i = 0; i < 1000; i++) {
-				System.out.println(client.echo("Hello World"));
-			}
+			System.out.println(client.echo("Hello World"));
 		} finally {
 			clientManager.close();
 		}

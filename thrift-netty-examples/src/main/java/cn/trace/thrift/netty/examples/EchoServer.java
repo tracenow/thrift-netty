@@ -29,17 +29,18 @@ public class EchoServer {
 
 	/**
 	 * @param args
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		ResourceLeakDetector.setLevel(Level.ADVANCED);
+		ResourceLeakDetector.setLevel(Level.ADVANCED); // check memory leak
 		EchoImpl echoImpl = new EchoImpl();
-		final NiftyProcessor niftyProcessor = new ThriftServiceProcessor(new ThriftCodecManager(), ImmutableList.<ThriftEventHandler>of(), echoImpl);
+		final NiftyProcessor niftyProcessor = new ThriftServiceProcessor(new ThriftCodecManager(),
+				ImmutableList.<ThriftEventHandler> of(), echoImpl);
 		TProcessor processor = new TProcessor() {
 
 			@Override
 			public boolean process(TProtocol in, TProtocol out) throws TException {
-				
+
 				try {
 					return niftyProcessor.process(in, out, null).get();
 				} catch (InterruptedException | ExecutionException e) {
@@ -47,11 +48,10 @@ public class EchoServer {
 				}
 				return false;
 			}
-			
+
 		};
-		ThriftNettyServer server = new ThriftNettyServer(new ThriftNettyServerDefBuilder()
-												.processorFactory(new TProcessorFactory(processor))
-												.build());
+		ThriftNettyServer server = new ThriftNettyServer(
+				new ThriftNettyServerDefBuilder().processorFactory(new TProcessorFactory(processor)).build());
 		server.start();
 	}
 

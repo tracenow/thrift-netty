@@ -13,64 +13,58 @@ import org.apache.thrift.protocol.TProtocolFactory;
  *
  */
 public class ThriftNettyServerDef {
-	
+
 	private final String name;
-    private final int serverPort;
-    private final int maxFrameSize;
-    private final Executor workExecutor;
-    private final int bossEventLoopCount;
-    private final int workerEventLoopCount;
-    private final TProcessorFactory processorFactory;
-    private final TProtocolFactory protocolFactory;
-    
-    
-    public ThriftNettyServerDef(String name,
-                                int serverPort,
-                                int maxFrameSize,
-                                Executor workExecutor,
-                                int bossEventLoopCount,
-                                int workerEventLoopCount,
-                                TProcessorFactory processorFactory,
-                                TProtocolFactory protocolFactory) {
-        this.name = name;
-        this.serverPort = serverPort;
-        this.maxFrameSize = maxFrameSize;
-        this.workExecutor = workExecutor;
-        this.bossEventLoopCount = bossEventLoopCount;
-        this.workerEventLoopCount = workerEventLoopCount;
-        this.processorFactory = processorFactory;
-        this.protocolFactory = protocolFactory;
-    }
+	private final int serverPort;
+	private final int maxFrameSize;
+	private final Executor workExecutor;
+	private final int bossEventLoopCount;
+	private final int workerEventLoopCount;
+	private final TProcessorFactory processorFactory;
+	private final TProtocolFactory protocolFactory;
 
-    public String getName() {
-        return name;
-    }
+	public ThriftNettyServerDef(String name, int serverPort, int maxFrameSize, Executor workExecutor,
+			int bossEventLoopCount, int workerEventLoopCount, TProcessorFactory processorFactory,
+			TProtocolFactory protocolFactory) {
+		this.name = name;
+		this.serverPort = serverPort;
+		this.maxFrameSize = maxFrameSize;
+		this.workExecutor = workExecutor;
+		this.bossEventLoopCount = bossEventLoopCount;
+		this.workerEventLoopCount = workerEventLoopCount;
+		this.processorFactory = processorFactory;
+		this.protocolFactory = protocolFactory;
+	}
 
-    public int getServerPort() {
-        return serverPort;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public int getMaxFrameSize() {
-        return maxFrameSize;
-    }
+	public int getServerPort() {
+		return serverPort;
+	}
 
-    public Executor getWorkExecutor() {
-        return workExecutor;
-    }
+	public int getMaxFrameSize() {
+		return maxFrameSize;
+	}
 
-    public int getBossEventLoopCount() {
-        return bossEventLoopCount;
-    }
+	public Executor getWorkExecutor() {
+		return workExecutor;
+	}
 
-    public int getWorkerEventLoopCount() {
-        return workerEventLoopCount;
-    }
+	public int getBossEventLoopCount() {
+		return bossEventLoopCount;
+	}
 
-    public TProcessorFactory getProcessorFactory() {
-        return processorFactory;
-    }
+	public int getWorkerEventLoopCount() {
+		return workerEventLoopCount;
+	}
 
-    public TProtocolFactory getProtocolFactory() {
-        return protocolFactory;
-    }
+	public TProcessorFactory getProcessorFactory() {
+		return processorFactory;
+	}
+
+	public TProtocolFactory getProtocolFactory() {
+		return protocolFactory;
+	}
 }

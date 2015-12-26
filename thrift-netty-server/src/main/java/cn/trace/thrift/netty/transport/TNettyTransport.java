@@ -2,6 +2,7 @@
  * 
  */
 package cn.trace.thrift.netty.transport;
+
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 import org.apache.thrift.transport.TTransport;
@@ -21,41 +22,39 @@ public class TNettyTransport extends TTransport implements ReferenceCounted {
 
 	private static final int DEFAULT_OUTPUT_BUFFER_SIZE = 1024;
 	private static final AtomicIntegerFieldUpdater<TNettyTransport> refCntUpdater;
-	
+
 	public static enum Type {
-        UNKNOWN,
-        UNFRAMED,
-        FRAMED
-    }
+		UNKNOWN, UNFRAMED, FRAMED
+	}
 
-    static {
-        AtomicIntegerFieldUpdater<TNettyTransport> updater =
-                PlatformDependent.newAtomicIntegerFieldUpdater(TNettyTransport.class, "refCnt");
-        if (updater == null) {
-            updater = AtomicIntegerFieldUpdater.newUpdater(TNettyTransport.class, "refCnt");
-        }
-        refCntUpdater = updater;
-    }
+	static {
+		AtomicIntegerFieldUpdater<TNettyTransport> updater = PlatformDependent
+				.newAtomicIntegerFieldUpdater(TNettyTransport.class, "refCnt");
+		if (updater == null) {
+			updater = AtomicIntegerFieldUpdater.newUpdater(TNettyTransport.class, "refCnt");
+		}
+		refCntUpdater = updater;
+	}
 
-    private Channel channel;
-    private ByteBuf in;
-    private ByteBuf out = null;
-    private Type type;
-    
-    private volatile int refCnt = 1;
-	
+	private Channel channel;
+	private ByteBuf in;
+	private ByteBuf out = null;
+	private Type type;
+
+	private volatile int refCnt = 1;
+
 	public TNettyTransport(Channel channel, ByteBuf in) {
-        this(channel, in, Type.UNKNOWN);
-    }
-    
-    public TNettyTransport(Channel channel, ByteBuf in, Type type) {
-    	this.channel = channel;
-    	this.in = in;
-    	this.in.retain();
-    	this.type = type;
-    	this.out = channel.alloc().heapBuffer(DEFAULT_OUTPUT_BUFFER_SIZE);
-    }
-	
+		this(channel, in, Type.UNKNOWN);
+	}
+
+	public TNettyTransport(Channel channel, ByteBuf in, Type type) {
+		this.channel = channel;
+		this.in = in;
+		this.in.retain();
+		this.type = type;
+		this.out = channel.alloc().heapBuffer(DEFAULT_OUTPUT_BUFFER_SIZE);
+	}
+
 	public Type getType() {
 		return type;
 	}
@@ -75,21 +74,20 @@ public class TNettyTransport extends TTransport implements ReferenceCounted {
 	}
 
 	@Override
-	public void open() throws TTransportException {}
+	public void open() throws TTransportException {
+	}
 
 	@Override
-    public int read(byte[] bytes, int offset, int length)
-            throws TTransportException {
-        int _read = Math.min(in.readableBytes(), length);
-        in.readBytes(bytes, offset, _read);
-        return _read;
-    }
+	public int read(byte[] bytes, int offset, int length) throws TTransportException {
+		int _read = Math.min(in.readableBytes(), length);
+		in.readBytes(bytes, offset, _read);
+		return _read;
+	}
 
 	@Override
-    public void write(byte[] bytes, int offset, int length)
-            throws TTransportException {
-        out.writeBytes(bytes, offset, length);
-    }
+	public void write(byte[] bytes, int offset, int length) throws TTransportException {
+		out.writeBytes(bytes, offset, length);
+	}
 
 	@Override
 	public int refCnt() {
@@ -99,84 +97,84 @@ public class TNettyTransport extends TTransport implements ReferenceCounted {
 	@Override
 	public ReferenceCounted retain() {
 		for (;;) {
-            int refCnt = this.refCnt;
-            if (refCnt == 0) {
-                throw new IllegalReferenceCountException(0, 1);
-            }
-            if (refCnt == Integer.MAX_VALUE) {
-                throw new IllegalReferenceCountException(Integer.MAX_VALUE, 1);
-            }
-            if (refCntUpdater.compareAndSet(this, refCnt, refCnt + 1)) {
-                break;
-            }
-        }
-        return this;
+			int refCnt = this.refCnt;
+			if (refCnt == 0) {
+				throw new IllegalReferenceCountException(0, 1);
+			}
+			if (refCnt == Integer.MAX_VALUE) {
+				throw new IllegalReferenceCountException(Integer.MAX_VALUE, 1);
+			}
+			if (refCntUpdater.compareAndSet(this, refCnt, refCnt + 1)) {
+				break;
+			}
+		}
+		return this;
 	}
 
 	@Override
 	public ReferenceCounted retain(int increment) {
 		if (increment <= 0) {
-            throw new IllegalArgumentException("increment: " + increment + " (expected: > 0)");
-        }
+			throw new IllegalArgumentException("increment: " + increment + " (expected: > 0)");
+		}
 
-        for (;;) {
-            int refCnt = this.refCnt;
-            if (refCnt == 0) {
-                throw new IllegalReferenceCountException(0, increment);
-            }
-            if (refCnt > Integer.MAX_VALUE - increment) {
-                throw new IllegalReferenceCountException(refCnt, increment);
-            }
-            if (refCntUpdater.compareAndSet(this, refCnt, refCnt + increment)) {
-                break;
-            }
-        }
-        return this;
+		for (;;) {
+			int refCnt = this.refCnt;
+			if (refCnt == 0) {
+				throw new IllegalReferenceCountException(0, increment);
+			}
+			if (refCnt > Integer.MAX_VALUE - increment) {
+				throw new IllegalReferenceCountException(refCnt, increment);
+			}
+			if (refCntUpdater.compareAndSet(this, refCnt, refCnt + increment)) {
+				break;
+			}
+		}
+		return this;
 	}
 
 	@Override
 	public boolean release() {
 		for (;;) {
-            int refCnt = this.refCnt;
-            if (refCnt == 0) {
-                throw new IllegalReferenceCountException(0, -1);
-            }
+			int refCnt = this.refCnt;
+			if (refCnt == 0) {
+				throw new IllegalReferenceCountException(0, -1);
+			}
 
-            if (refCntUpdater.compareAndSet(this, refCnt, refCnt - 1)) {
-                if (refCnt == 1) {
-                	deallocate();
-                    return true;
-                }
-                return false;
-            }
-        }
+			if (refCntUpdater.compareAndSet(this, refCnt, refCnt - 1)) {
+				if (refCnt == 1) {
+					deallocate();
+					return true;
+				}
+				return false;
+			}
+		}
 	}
 
 	@Override
 	public boolean release(int decrement) {
 		if (decrement <= 0) {
-            throw new IllegalArgumentException("decrement: " + decrement + " (expected: > 0)");
-        }
+			throw new IllegalArgumentException("decrement: " + decrement + " (expected: > 0)");
+		}
 
-        for (;;) {
-            int refCnt = this.refCnt;
-            if (refCnt < decrement) {
-                throw new IllegalReferenceCountException(refCnt, -decrement);
-            }
+		for (;;) {
+			int refCnt = this.refCnt;
+			if (refCnt < decrement) {
+				throw new IllegalReferenceCountException(refCnt, -decrement);
+			}
 
-            if (refCntUpdater.compareAndSet(this, refCnt, refCnt - decrement)) {
-                if (refCnt == decrement) {
-                    deallocate();
-                    return true;
-                }
-                return false;
-            }
-        }
+			if (refCntUpdater.compareAndSet(this, refCnt, refCnt - decrement)) {
+				if (refCnt == decrement) {
+					deallocate();
+					return true;
+				}
+				return false;
+			}
+		}
 	}
-	
+
 	private void deallocate() {
 		in.release();
-        out.release();
+		out.release();
 	}
 
 }

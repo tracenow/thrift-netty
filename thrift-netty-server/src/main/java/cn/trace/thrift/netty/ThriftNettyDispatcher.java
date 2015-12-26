@@ -48,38 +48,38 @@ public class ThriftNettyDispatcher extends ChannelInboundHandlerAdapter {
 		}
 	}
 
-    private void processRequest(final ChannelHandlerContext ctx, final TNettyTransport messageTransport)
-            throws Exception {
-        executor.execute(new Runnable() {
+	private void processRequest(final ChannelHandlerContext ctx, final TNettyTransport messageTransport)
+			throws Exception {
+		executor.execute(new Runnable() {
 
-            @Override
-            public void run() {
-                try {
-                    TProtocol inProtocol = inProtocolFactory.getProtocol(messageTransport);
-                    TProtocol outProtocol = outProtocolFactory.getProtocol(messageTransport);
-                    ListenableFuture<Boolean> processFuture =
-                            Futures.immediateFuture(processorFactory.getProcessor(messageTransport).process(inProtocol, outProtocol));
-                    Futures.addCallback(processFuture, new FutureCallback<Boolean>() {
+			@Override
+			public void run() {
+				try {
+					TProtocol inProtocol = inProtocolFactory.getProtocol(messageTransport);
+					TProtocol outProtocol = outProtocolFactory.getProtocol(messageTransport);
+					ListenableFuture<Boolean> processFuture = Futures.immediateFuture(
+							processorFactory.getProcessor(messageTransport).process(inProtocol, outProtocol));
+					Futures.addCallback(processFuture, new FutureCallback<Boolean>() {
 
-                        @Override
-                        public void onSuccess(Boolean result) {
-                            if (ctx.channel().isActive()) {
-                                ctx.writeAndFlush(messageTransport);
-                            }
-                        }
+						@Override
+						public void onSuccess(Boolean result) {
+							if (ctx.channel().isActive()) {
+								ctx.writeAndFlush(messageTransport);
+							}
+						}
 
-                        @Override
-                        public void onFailure(Throwable t) {
-                            ctx.close();
-                        }
+						@Override
+						public void onFailure(Throwable t) {
+							ctx.close();
+						}
 
-                    });
-                } catch (Throwable cause) {
-                    ctx.fireExceptionCaught(cause);
-                }
-            }
-            
-        });
-        
-    }
+					});
+				} catch (Throwable cause) {
+					ctx.fireExceptionCaught(cause);
+				}
+			}
+
+		});
+
+	}
 }

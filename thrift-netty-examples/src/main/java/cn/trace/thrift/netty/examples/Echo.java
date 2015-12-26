@@ -12,7 +12,7 @@ import com.facebook.swift.service.ThriftService;
  */
 @ThriftService
 public interface Echo {
-	
+
 	@ThriftMethod
 	public String echo(String info);
 }
