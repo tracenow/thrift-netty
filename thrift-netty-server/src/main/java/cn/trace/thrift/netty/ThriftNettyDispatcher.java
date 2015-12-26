@@ -5,6 +5,7 @@ package cn.trace.thrift.netty;
 
 import java.util.concurrent.Executor;
 
+import org.apache.thrift.TException;
 import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
@@ -15,6 +16,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import cn.trace.thrift.netty.configure.ThriftNettyServerDef;
 import cn.trace.thrift.netty.transport.TNettyTransport;
+import cn.trace.thrift.netty.util.ThreadContext;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -55,10 +57,7 @@ public class ThriftNettyDispatcher extends ChannelInboundHandlerAdapter {
 			@Override
 			public void run() {
 				try {
-					TProtocol inProtocol = inProtocolFactory.getProtocol(messageTransport);
-					TProtocol outProtocol = outProtocolFactory.getProtocol(messageTransport);
-					ListenableFuture<Boolean> processFuture = Futures.immediateFuture(
-							processorFactory.getProcessor(messageTransport).process(inProtocol, outProtocol));
+					ListenableFuture<Boolean> processFuture = process(ctx, messageTransport);
 					Futures.addCallback(processFuture, new FutureCallback<Boolean>() {
 
 						@Override
@@ -70,6 +69,7 @@ public class ThriftNettyDispatcher extends ChannelInboundHandlerAdapter {
 
 						@Override
 						public void onFailure(Throwable t) {
+							ctx.fireExceptionCaught(t);
 							ctx.close();
 						}
 
@@ -80,6 +80,17 @@ public class ThriftNettyDispatcher extends ChannelInboundHandlerAdapter {
 			}
 
 		});
+	}
 
+	private ListenableFuture<Boolean> process(ChannelHandlerContext ctx, TNettyTransport messageTransport)
+			throws TException {
+		try {
+			ThreadContext.bind(messageTransport);
+			TProtocol inProtocol = inProtocolFactory.getProtocol(messageTransport);
+			TProtocol outProtocol = outProtocolFactory.getProtocol(messageTransport);
+			return Futures.immediateFuture(processorFactory.getProcessor(messageTransport).process(inProtocol, outProtocol));
+		} finally {
+			ThreadContext.unbind();
+		}
 	}
 }

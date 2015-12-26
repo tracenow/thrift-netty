@@ -41,9 +41,7 @@ public class ThriftNettyServer {
 
 					@Override
 					protected void initChannel(Channel ch) throws Exception {
-						ch.pipeline()
-								.addLast("decode",
-										new ThriftNettyDecoder(def.getMaxFrameSize(), def.getProtocolFactory()))
+						ch.pipeline().addLast("decode", new ThriftNettyDecoder(def.getMaxFrameSize(), def.getProtocolFactory()))
 								.addLast("encode", new ThriftNettyEncoder(def.getMaxFrameSize()))
 								.addLast("dispatch", new ThriftNettyDispatcher(def));
 					}

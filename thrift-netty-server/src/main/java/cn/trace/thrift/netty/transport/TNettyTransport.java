@@ -3,6 +3,7 @@
  */
 package cn.trace.thrift.netty.transport;
 
+import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 import org.apache.thrift.transport.TTransport;
@@ -18,7 +19,7 @@ import io.netty.util.internal.PlatformDependent;
  * @author trace
  *
  */
-public class TNettyTransport extends TTransport implements ReferenceCounted {
+public class TNettyTransport extends TTransport implements ReferenceCounted, TNettyTransportContext {
 
 	private static final int DEFAULT_OUTPUT_BUFFER_SIZE = 1024;
 	private static final AtomicIntegerFieldUpdater<TNettyTransport> refCntUpdater;
@@ -61,6 +62,11 @@ public class TNettyTransport extends TTransport implements ReferenceCounted {
 
 	public ByteBuf getOut() {
 		return out;
+	}
+	
+	@Override
+	public SocketAddress getRemoteAddress() {
+		return this.channel.remoteAddress();
 	}
 
 	@Override
