@@ -5,6 +5,13 @@
     <artifactId>thrift-netty</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>thrift-netty-server</artifactId>
+  <artifactId>thrift-netty-examples</artifactId>
   
+   <dependencies>  
+        <dependency>  
+            <groupId>cn.trace</groupId>  
+            <artifactId>thrift-netty-server</artifactId>  
+            <version>${project.version}</version>  
+        </dependency>  
+    </dependencies>
 </project>
