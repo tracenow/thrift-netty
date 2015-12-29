@@ -5,14 +5,9 @@ package cn.trace.thrift.netty;
 
 import java.util.concurrent.Executor;
 
-import org.apache.thrift.TException;
 import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
-
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 
 import cn.trace.thrift.netty.configure.ThriftNettyServerDef;
 import cn.trace.thrift.netty.transport.TNettyTransport;
@@ -38,7 +33,7 @@ public class ThriftNettyDispatcher extends ChannelInboundHandlerAdapter {
 		this.processorFactory = def.getProcessorFactory();
 		this.inProtocolFactory = def.getProtocolFactory();
 		this.outProtocolFactory = def.getProtocolFactory();
-		this.executor = def.getWorkExecutor();
+		this.executor = def.getTaskExecutor();
 	}
 
 	@Override
@@ -57,40 +52,19 @@ public class ThriftNettyDispatcher extends ChannelInboundHandlerAdapter {
 			@Override
 			public void run() {
 				try {
-					ListenableFuture<Boolean> processFuture = process(ctx, messageTransport);
-					Futures.addCallback(processFuture, new FutureCallback<Boolean>() {
-
-						@Override
-						public void onSuccess(Boolean result) {
-							if (ctx.channel().isActive()) {
-								ctx.writeAndFlush(messageTransport);
-							}
-						}
-
-						@Override
-						public void onFailure(Throwable t) {
-							ctx.fireExceptionCaught(t);
-							ctx.close();
-						}
-
-					});
+					ThreadContext.bind(messageTransport);
+					TProtocol inProtocol = inProtocolFactory.getProtocol(messageTransport);
+					TProtocol outProtocol = outProtocolFactory.getProtocol(messageTransport);
+					processorFactory.getProcessor(messageTransport).process(inProtocol, outProtocol);
+					ctx.writeAndFlush(messageTransport);
 				} catch (Throwable cause) {
 					ctx.fireExceptionCaught(cause);
+				} finally {
+					ThreadContext.unbind();
 				}
 			}
 
 		});
 	}
 
-	private ListenableFuture<Boolean> process(ChannelHandlerContext ctx, TNettyTransport messageTransport)
-			throws TException {
-		try {
-			ThreadContext.bind(messageTransport);
-			TProtocol inProtocol = inProtocolFactory.getProtocol(messageTransport);
-			TProtocol outProtocol = outProtocolFactory.getProtocol(messageTransport);
-			return Futures.immediateFuture(processorFactory.getProcessor(messageTransport).process(inProtocol, outProtocol));
-		} finally {
-			ThreadContext.unbind();
-		}
-	}
 }

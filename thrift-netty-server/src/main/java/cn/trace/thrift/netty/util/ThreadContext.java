@@ -64,6 +64,7 @@ public final class ThreadContext {
 
 	private static final class InheritableThreadLocalMap<T extends Map<Object, Object>>
 			extends InheritableThreadLocal<Map<Object, Object>> {
+		
 		protected Map<Object, Object> initialValue() {
 			return Maps.newHashMap();
 		}

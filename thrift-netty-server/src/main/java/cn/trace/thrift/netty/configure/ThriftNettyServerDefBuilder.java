@@ -27,7 +27,7 @@ public class ThriftNettyServerDefBuilder {
 
 	private static final int MAX_FRAME_SIZE = 64 * 1024 * 1024;
 
-	private Executor workExecutor;
+	private Executor taskExecutor;
 
 	private int bossEventLoopCount;
 
@@ -41,7 +41,7 @@ public class ThriftNettyServerDefBuilder {
 		this.name = "ThriftNettyServer";
 		this.serverPort = 8080;
 		this.maxFrameSize = MAX_FRAME_SIZE;
-		this.workExecutor = Executors.newFixedThreadPool(DEFAULT_WORKER_THREAD_COUNT);
+		this.taskExecutor = Executors.newFixedThreadPool(DEFAULT_WORKER_THREAD_COUNT);
 		this.bossEventLoopCount = DEFAULT_BOSS_THREAD_COUNT;
 		this.workerEventLoopCount = DEFAULT_WORKER_THREAD_COUNT;
 		this.protocolFactory = new TBinaryProtocol.Factory(true, true);
@@ -62,8 +62,8 @@ public class ThriftNettyServerDefBuilder {
 		return this;
 	}
 
-	public ThriftNettyServerDefBuilder workExecutor(Executor workExecutor) {
-		this.workExecutor = workExecutor;
+	public ThriftNettyServerDefBuilder taskExecutor(Executor taskExecutor) {
+		this.taskExecutor = taskExecutor;
 		return this;
 	}
 
@@ -88,7 +88,7 @@ public class ThriftNettyServerDefBuilder {
 	}
 
 	public ThriftNettyServerDef build() {
-		return new ThriftNettyServerDef(name, serverPort, maxFrameSize, workExecutor, bossEventLoopCount,
-				workerEventLoopCount, processorFactory, protocolFactory);
+		return new ThriftNettyServerDef(name, serverPort, maxFrameSize, taskExecutor, 
+				bossEventLoopCount, workerEventLoopCount, processorFactory, protocolFactory);
 	}
 }
