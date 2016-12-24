@@ -20,12 +20,13 @@ public class EchoClient {
 	 * @throws ExecutionException
 	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) throws InterruptedException, ExecutionException {
+	public static void main(String[] args) throws Exception {
 		ThriftClientManager clientManager = new ThriftClientManager();
 		try {
 			FramedClientConnector connector = new FramedClientConnector(new InetSocketAddress("localhost", 8080));
 			Echo client = clientManager.createClient(connector, Echo.class).get();
 			System.out.println(client.echo("Hello World"));
+			client.close();
 		} finally {
 			clientManager.close();
 		}

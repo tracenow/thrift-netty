@@ -11,7 +11,7 @@ import com.facebook.swift.service.ThriftService;
  *
  */
 @ThriftService
-public interface Echo {
+public interface Echo extends AutoCloseable {
 
 	@ThriftMethod
 	public String echo(String info);

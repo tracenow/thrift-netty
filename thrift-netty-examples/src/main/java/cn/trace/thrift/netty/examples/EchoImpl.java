@@ -24,4 +24,9 @@ public class EchoImpl implements Echo {
 		return info;
 	}
 
+	@Override
+	public void close() throws Exception {
+		//close some connection resource
+	}
+
 }
