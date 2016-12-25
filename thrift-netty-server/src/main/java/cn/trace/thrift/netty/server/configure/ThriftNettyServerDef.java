@@ -1,7 +1,4 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.configure;
+package cn.trace.thrift.netty.server.configure;
 
 import java.util.concurrent.Executor;
 

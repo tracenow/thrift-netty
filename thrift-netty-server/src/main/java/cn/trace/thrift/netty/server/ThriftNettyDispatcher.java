@@ -1,7 +1,4 @@
-/**
- * 
- */
-package cn.trace.thrift.netty;
+package cn.trace.thrift.netty.server;
 
 import java.util.concurrent.Executor;
 
@@ -9,9 +6,9 @@ import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
 
-import cn.trace.thrift.netty.configure.ThriftNettyServerDef;
-import cn.trace.thrift.netty.transport.TNettyTransport;
-import cn.trace.thrift.netty.util.ThreadContext;
+import cn.trace.thrift.netty.server.configure.ThriftNettyServerDef;
+import cn.trace.thrift.netty.server.context.ThreadContext;
+import cn.trace.thrift.netty.server.transport.TNettyTransport;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 

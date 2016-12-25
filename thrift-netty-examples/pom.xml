@@ -12,6 +12,11 @@
             <groupId>cn.trace</groupId>  
             <artifactId>thrift-netty-server</artifactId>  
             <version>${project.version}</version>  
-        </dependency>  
+        </dependency> 
+        <dependency>  
+            <groupId>cn.trace</groupId>  
+            <artifactId>thrift-netty-client</artifactId>  
+            <version>${project.version}</version>  
+        </dependency> 
     </dependencies>
 </project>

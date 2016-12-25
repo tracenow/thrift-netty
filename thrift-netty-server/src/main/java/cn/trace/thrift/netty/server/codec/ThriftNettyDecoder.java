@@ -1,14 +1,11 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.codec;
+package cn.trace.thrift.netty.server.codec;
 
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.protocol.TProtocolUtil;
 import org.apache.thrift.protocol.TType;
-import cn.trace.thrift.netty.transport.TNettyTransport;
 
+import cn.trace.thrift.netty.server.transport.TNettyTransport;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.TooLongFrameException;

@@ -1,14 +1,11 @@
-/**
- * 
- */
-package cn.trace.thrift.netty;
+package cn.trace.thrift.netty.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.trace.thrift.netty.codec.ThriftNettyDecoder;
-import cn.trace.thrift.netty.codec.ThriftNettyEncoder;
-import cn.trace.thrift.netty.configure.ThriftNettyServerDef;
+import cn.trace.thrift.netty.server.codec.ThriftNettyDecoder;
+import cn.trace.thrift.netty.server.codec.ThriftNettyEncoder;
+import cn.trace.thrift.netty.server.configure.ThriftNettyServerDef;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;

@@ -1,7 +1,4 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.examples;
+package cn.trace.thrift.netty.examples.api;
 
 import com.facebook.swift.service.ThriftMethod;
 import com.facebook.swift.service.ThriftService;

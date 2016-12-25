@@ -1,7 +1,4 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.codec;
+package cn.trace.thrift.netty.server.codec;
 
 import java.util.List;
 

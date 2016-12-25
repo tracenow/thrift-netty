@@ -1,13 +1,11 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.examples;
+package cn.trace.thrift.netty.examples.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cn.trace.thrift.netty.transport.TNettyTransportContext;
-import cn.trace.thrift.netty.util.ThreadContext;
+import cn.trace.thrift.netty.examples.api.Echo;
+import cn.trace.thrift.netty.server.context.ThreadContext;
+import cn.trace.thrift.netty.server.transport.TNettyTransportContext;
 
 /**
  * @author trace

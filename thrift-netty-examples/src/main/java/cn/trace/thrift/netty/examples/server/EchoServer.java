@@ -1,7 +1,4 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.examples;
+package cn.trace.thrift.netty.examples.server;
 
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
@@ -14,8 +11,8 @@ import com.facebook.swift.service.ThriftEventHandler;
 import com.facebook.swift.service.ThriftServiceProcessor;
 import com.google.common.collect.ImmutableList;
 
-import cn.trace.thrift.netty.ThriftNettyServer;
-import cn.trace.thrift.netty.configure.ThriftNettyServerDefBuilder;
+import cn.trace.thrift.netty.server.ThriftNettyServer;
+import cn.trace.thrift.netty.server.configure.ThriftNettyServerDefBuilder;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.ResourceLeakDetector.Level;
 

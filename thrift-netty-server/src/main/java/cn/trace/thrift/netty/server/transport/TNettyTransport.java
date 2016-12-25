@@ -1,7 +1,4 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.transport;
+package cn.trace.thrift.netty.server.transport;
 
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;

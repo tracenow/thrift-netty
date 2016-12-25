@@ -1,14 +1,11 @@
-/**
- * 
- */
-package cn.trace.thrift.netty.util;
+package cn.trace.thrift.netty.server.context;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import cn.trace.thrift.netty.transport.TNettyTransportContext;
+import cn.trace.thrift.netty.server.transport.TNettyTransportContext;
 
 /**
  * @author trace
