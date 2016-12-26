@@ -14,9 +14,9 @@ public abstract class Pool<T> implements Closeable {
 
 	protected GenericObjectPool<T> internalPool;
 
-	public Pool() {
-	}
+	public Pool() {}
 
+	@Override
 	public void close() {
 		closeInternalPool();
 	}

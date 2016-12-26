@@ -3,32 +3,32 @@ package cn.trace.thrift.netty.client.pool;
 import java.net.InetSocketAddress;
 
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
-import com.facebook.swift.service.ThriftClientManager;
 
 import cn.trace.thrift.netty.common.pool.Pool;
+import cn.trace.thrift.netty.common.pool.PoolConfig;
 import cn.trace.thrift.netty.common.pool.PoolException;
+
+import com.facebook.swift.service.ThriftClientManager;
 
 /**
  * @author trace
  *
  */
-public class ThriftClientPool extends Pool<AutoCloseable> {
+public class ThriftClientPool<T extends AutoCloseable> extends Pool<T> {
 
 	private final ThriftClientManager clientManager = new ThriftClientManager();
 	
-	public ThriftClientPool(GenericObjectPoolConfig poolConfig, InetSocketAddress socketAddress,
-			Class<? extends AutoCloseable> type) {
-		this.internalPool = new GenericObjectPool<AutoCloseable>(new ThriftClientFactory(clientManager, socketAddress, type), poolConfig);
+	public ThriftClientPool(PoolConfig poolConfig, InetSocketAddress socketAddress,
+			Class<T> type) {
+		this.internalPool = new GenericObjectPool<T>(new ThriftClientFactory<T>(clientManager, socketAddress, type), poolConfig.getPoolConfig());
 	}
 
-	public void returnBrokenResource(AutoCloseable resource) {
+	public void returnBrokenResource(T resource) {
 		if (resource != null)
 			returnBrokenResourceObject(resource);
 	}
 
-	public void returnResource(AutoCloseable resource) {
+	public void returnResource(T resource) {
 		if (resource != null)
 			try {
 				returnResourceObject(resource);
@@ -38,7 +38,7 @@ public class ThriftClientPool extends Pool<AutoCloseable> {
 			}
 	}
 
-	public AutoCloseable getResource() {
+    public T getResource() {
 		return super.getResource();
 	}
 

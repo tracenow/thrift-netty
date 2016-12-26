@@ -13,41 +13,41 @@ import com.facebook.swift.service.ThriftClientManager;
  * @author trace
  *
  */
-public class ThriftClientFactory implements PooledObjectFactory<AutoCloseable> {
+public class ThriftClientFactory<T extends AutoCloseable> implements PooledObjectFactory<T> {
 
 	private final ThriftClientManager clientManager;
 	private final InetSocketAddress socketAddress;
-	private final Class<? extends AutoCloseable> type;
+	private final Class<T> type;
 	
-	public ThriftClientFactory(ThriftClientManager clientManager, InetSocketAddress socketAddress, Class<? extends AutoCloseable> type) {
+	public ThriftClientFactory(ThriftClientManager clientManager, InetSocketAddress socketAddress, Class<T> type) {
 		this.clientManager = clientManager;
 		this.socketAddress = socketAddress;
 		this.type = type;
 	}
 
 	@Override
-	public void activateObject(PooledObject<AutoCloseable> pooledObject) throws Exception {
+	public void activateObject(PooledObject<T> pooledObject) throws Exception {
 		//
 	}
 
 	@Override
-	public void destroyObject(PooledObject<AutoCloseable> pooledObject) throws Exception {
+	public void destroyObject(PooledObject<T> pooledObject) throws Exception {
 		pooledObject.getObject().close();
 	}
 
-	@Override
-	public PooledObject<AutoCloseable> makeObject() throws Exception {
+    @Override
+	public PooledObject<T> makeObject() throws Exception {
 		FramedClientConnector connector = new FramedClientConnector(socketAddress);
-		return new DefaultPooledObject<AutoCloseable>(clientManager.createClient(connector, type).get());
+		return new DefaultPooledObject<T>(clientManager.createClient(connector, type).get());
 	}
 
 	@Override
-	public void passivateObject(PooledObject<AutoCloseable> pooledObject) throws Exception {
+	public void passivateObject(PooledObject<T> pooledObject) throws Exception {
 		//
 	}
 
 	@Override
-	public boolean validateObject(PooledObject<AutoCloseable> pooledObject) {
+	public boolean validateObject(PooledObject<T> pooledObject) {
 		return true;
 	}
 	

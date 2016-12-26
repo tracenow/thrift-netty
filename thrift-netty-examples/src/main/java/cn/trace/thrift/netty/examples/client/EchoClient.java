@@ -2,9 +2,9 @@ package cn.trace.thrift.netty.examples.client;
 
 import java.net.InetSocketAddress;
 
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
-import cn.trace.thrift.netty.client.pool.ThriftClientPoolManager;
+import cn.trace.thrift.netty.client.pool.ThriftClientPool;
+import cn.trace.thrift.netty.common.pool.Pool;
+import cn.trace.thrift.netty.common.pool.PoolConfig;
 import cn.trace.thrift.netty.examples.api.Echo;
 
 /**
@@ -19,19 +19,20 @@ public class EchoClient {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+	    PoolConfig poolConfig = new PoolConfig();
 		InetSocketAddress socketAddress = new InetSocketAddress("localhost", 8080);
-		ThriftClientPoolManager<Echo> poolManager = new ThriftClientPoolManager<Echo>(poolConfig, socketAddress, Echo.class);
+		Pool<Echo> pool = new ThriftClientPool<Echo>(poolConfig, socketAddress, Echo.class);
 	    Echo client = null;
 	    try {
-	    	client = poolManager.getResource();
+	    	client = pool.getResource();
 	    	System.out.println(client.echo("Hello World"));
 	    } catch(Throwable t) {
-	    	poolManager.returnBrokenResource(client);
+	        pool.returnBrokenResource(client);
+	        client = null;
 	    } finally {
-	    	poolManager.returnResource(client);
+	        pool.returnResource(client);
 	    }
-	    poolManager.close();
+	    pool.close();
 	}
 
 }
