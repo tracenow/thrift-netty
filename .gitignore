@@ -1,0 +1,63 @@
+# ignore all hidden files and maven target folder, please don't named your folder as 'target/bin/tmp'
+.*
+target/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*.class
+ 
+# ignore zip files
+*.7z
+*.jar
+*.rar
+*.zip
+*.gz
+*.bzip
+*.bz2
+*.xz
+*.lzma
+*.cab
+ 
+# Package Files
+*.jar
+*.war
+*.ear
+*.iso
+*.tar
+ 
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+*.log
+ 
+# Libraries
+*.lib
+*.a
+ 
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+ 
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# IDE files
+**/*.iml
+.idea/
+
+# bin
+**/target/
+**/node_modules/

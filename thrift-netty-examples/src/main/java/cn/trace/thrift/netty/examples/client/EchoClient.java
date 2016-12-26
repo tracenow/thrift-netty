@@ -1,10 +1,6 @@
-/**
- * 
- */
 package cn.trace.thrift.netty.examples.client;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
@@ -18,9 +14,9 @@ import cn.trace.thrift.netty.examples.api.Echo;
 public class EchoClient {
 
 	/**
+	 * 
 	 * @param args
-	 * @throws ExecutionException
-	 * @throws InterruptedException
+	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
 		GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
