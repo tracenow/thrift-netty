@@ -19,9 +19,9 @@ public class EchoClient {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-	    ThriftClientConfig poolConfig = new ThriftClientConfig();
+	    ThriftClientConfig config = new ThriftClientConfig();
 		InetSocketAddress socketAddress = new InetSocketAddress("localhost", 8080);
-		Pool<Echo> pool = new ThriftClientPool<Echo>(poolConfig, socketAddress, Echo.class);
+		Pool<Echo> pool = new ThriftClientPool<Echo>(config, socketAddress, Echo.class);
 	    Echo client = null;
 	    try {
 	    	client = pool.getResource();
