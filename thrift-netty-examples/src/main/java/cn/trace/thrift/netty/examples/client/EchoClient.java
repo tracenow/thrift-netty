@@ -3,8 +3,8 @@ package cn.trace.thrift.netty.examples.client;
 import java.net.InetSocketAddress;
 
 import cn.trace.thrift.netty.client.pool.ThriftClientPool;
+import cn.trace.thrift.netty.client.pool.ThriftClientConfig;
 import cn.trace.thrift.netty.common.pool.Pool;
-import cn.trace.thrift.netty.common.pool.PoolConfig;
 import cn.trace.thrift.netty.examples.api.Echo;
 
 /**
@@ -19,7 +19,7 @@ public class EchoClient {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-	    PoolConfig poolConfig = new PoolConfig();
+	    ThriftClientConfig poolConfig = new ThriftClientConfig();
 		InetSocketAddress socketAddress = new InetSocketAddress("localhost", 8080);
 		Pool<Echo> pool = new ThriftClientPool<Echo>(poolConfig, socketAddress, Echo.class);
 	    Echo client = null;

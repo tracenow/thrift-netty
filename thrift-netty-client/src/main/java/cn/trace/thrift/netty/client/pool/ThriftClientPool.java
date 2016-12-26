@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import cn.trace.thrift.netty.common.pool.Pool;
-import cn.trace.thrift.netty.common.pool.PoolConfig;
 import cn.trace.thrift.netty.common.pool.PoolException;
 
 import com.facebook.swift.service.ThriftClientManager;
@@ -18,9 +17,11 @@ public class ThriftClientPool<T extends AutoCloseable> extends Pool<T> {
 
 	private final ThriftClientManager clientManager = new ThriftClientManager();
 	
-	public ThriftClientPool(PoolConfig poolConfig, InetSocketAddress socketAddress,
+	public ThriftClientPool(ThriftClientConfig poolConfig, InetSocketAddress socketAddress,
 			Class<T> type) {
-		this.internalPool = new GenericObjectPool<T>(new ThriftClientFactory<T>(clientManager, socketAddress, type), poolConfig.getPoolConfig());
+		this.internalPool = new GenericObjectPool<T>(
+		        new ThriftClientFactory<T>(clientManager, socketAddress, type, poolConfig),
+		        poolConfig.getPoolConfig());
 	}
 
 	public void returnBrokenResource(T resource) {
